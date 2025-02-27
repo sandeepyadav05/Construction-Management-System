@@ -26,6 +26,8 @@ const pdfkit = require('pdfkit');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const { isloggedIn,isOwner} = require("./middleware.js");
+const ExpressError = require("./util/ExpressError");
+
 
 
 
@@ -198,10 +200,15 @@ app.use("/contact",async(req,res)=>
 // Routes
 app.get('/:id',isloggedIn,attendanceController.getAttendance);
 app.post('/mark-attendance', attendanceController.markAttendance);
-app.all("*",(req,res,next)=>
-{
-    next(new ExpressError(404 ,"Page Not Found!"));
-})
+// app.all("*",(req,res,next)=>
+// {      console.log(`404 Error: ${req.originalUrl} not found`);
+//     next(new ExpressError(404 ,"Page Not Found!"));
+// })
+
+app.get("/", (req, res) => {
+    res.redirect("/home");
+});
+
 
 app.use((err,req,res,next)=>
 {
